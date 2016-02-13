@@ -16,6 +16,7 @@ public class Icon implements Printable{
 	}
 	
 	public char getCharacter(){return this.character;}
+	public Color getColor(){return this.color;}
 	
 	public void printToTerminal(AsciiPanel _terminal, int _x, int _y){
 		_terminal.write(this.character, _x, _y, this.color);

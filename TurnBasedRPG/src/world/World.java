@@ -37,7 +37,7 @@ public class World {
 	}
 	
 	public boolean isPathable(int x, int y){
-		return this.figures[x][y].isNull();
+		return isInBounds(x, y) && this.figures[x][y].isNull();
 	}
 	
 	public boolean addFigure(Figure figure, int x, int y){

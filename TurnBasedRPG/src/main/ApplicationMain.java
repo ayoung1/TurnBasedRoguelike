@@ -20,7 +20,10 @@ public class ApplicationMain extends JFrame implements KeyListener{
 	
 	public ApplicationMain(){
 		super();
+		
 		GameEngine.addToParty(new TestFigure());
+		GameEngine.addToParty(new TestFigure("Test2"));
+		
 		this.terminal = new AsciiPanel();
 		add(this.terminal);
 		pack();
