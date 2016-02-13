@@ -66,7 +66,7 @@ public class BattleScreen implements Screen{
 		int offset = this.offset;
 		
 		terminal.write("Actions: ", offset, this.height+1);
-		offset += 9;
+		offset += 3;
 		
 		if(turn.hasMove()){
 			terminal.write("m:move ", offset, this.height+2);
@@ -105,10 +105,10 @@ public class BattleScreen implements Screen{
 		if(this.subscreen != null)
 			this.subscreen = this.subscreen.respondToUserInput(key);
 		else{
-			if(key.getKeyCode() == KeyEvent.VK_M)
+			if(this.turn.hasMove() && key.getKeyCode() == KeyEvent.VK_M)
 				this.subscreen = new MoveScreen(this.turn, this.world, this.offset);
-			if(key.getKeyCode() == KeyEvent.VK_A)
-				this.turn.action();
+			if(this.turn.hasAction() && key.getKeyCode() == KeyEvent.VK_A)
+				this.subscreen = new ActionScreen(this.turn, this.world, this.offset);
 			if(key.getKeyCode() == KeyEvent.VK_E){
 				this.combatants.add(this.combatants.remove());
 				this.combatants.peek().startTurn();

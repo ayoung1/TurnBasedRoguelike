@@ -10,5 +10,6 @@ public abstract class Item {
 	
 	public String getName(){return this.name;}
 	
+	public abstract String listView();
 	public abstract void view();
 }

@@ -31,9 +31,7 @@ public class Cursor extends Icon{
 		else if(dy < 0)
 			y = -1;
 		
-		if(world.isPathable(this.x + x, this.y + y)){
-			this.x += x;
-			this.y += y;
-		}
+		this.x += x;
+		this.y += y;
 	}
 }

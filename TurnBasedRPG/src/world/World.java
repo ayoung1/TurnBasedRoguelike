@@ -29,8 +29,8 @@ public class World {
 		}
 	}
 	
-	public int getHeight(){return this.height;}
-	public int getWidth(){return this.width;}
+	public int getHeight(){return this.width;}
+	public int getWidth(){return this.height;}
 	
 	public boolean isInBounds(int x, int y){
 		return !(x < 0 || y < 0 || x >= this.height || y >= this.width);
@@ -38,6 +38,15 @@ public class World {
 	
 	public boolean isPathable(int x, int y){
 		return isInBounds(x, y) && this.figures[x][y].isNull();
+	}
+	
+	public boolean removeFigure(int x, int y){
+		if(this.isInBounds(x, y) && !this.figures[x][y].isNull()){
+			this.figures[x][y] = new NullFigure();
+			
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean addFigure(Figure figure, int x, int y){

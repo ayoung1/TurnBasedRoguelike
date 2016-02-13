@@ -46,9 +46,9 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	}
 	
 	public void move(World world, int x, int y){
+		world.removeFigure(this.x, this.y);
 		this.x = x;
 		this.y = y;
-		
 		world.addFigure(this.figure, this.x, this.y);
 		
 		this.hasMove = false;
@@ -69,6 +69,6 @@ public class Combatant implements Comparable<Combatant>, Printable{
 
 	@Override
 	public void printToTerminal(AsciiPanel terminal, int x, int y) {
-		terminal.write(this.figure.getIcon().getCharacter() + " " + this.figure.getName() + " f" + this.force, x, y);
+		terminal.write("f" + this.force + " :" + this.figure.getIcon().getCharacter() + ": " + this.figure.getName(), x, y);
 	}
 }
