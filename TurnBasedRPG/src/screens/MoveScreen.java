@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 
 import asciiPanel.AsciiPanel;
 import figure.Combatant;
+import icon.Cursor;
 import icon.Icon;
 import trig.Trig;
 import world.World;
@@ -14,7 +15,7 @@ public class MoveScreen implements Screen{
 	private World world;
 	private Cursor cursor;
 	private int offset;
-	
+
 	public MoveScreen(Combatant combatant, World world, int offset){
 		assert(combatant != null);
 		assert(world != null);
@@ -81,14 +82,7 @@ public class MoveScreen implements Screen{
 
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
-		if(key.getKeyCode() == KeyEvent.VK_W)
-			this.cursor.update(0, -1);
-		if(key.getKeyCode() == KeyEvent.VK_S)
-			this.cursor.update(0, 1);
-		if(key.getKeyCode() == KeyEvent.VK_D)
-			this.cursor.update(1, 0);
-		if(key.getKeyCode() == KeyEvent.VK_A)
-			this.cursor.update(-1, 0);
+		this.cursor.update(key);
 		if(key.getKeyCode() == KeyEvent.VK_ENTER){
 			if(this.world.isPathable(this.cursor.getX(), this.cursor.getY()))
 				this.moveCombatant();

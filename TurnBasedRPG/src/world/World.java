@@ -7,7 +7,8 @@ import asciiPanel.AsciiPanel;
 public class World {
 
 	private Icon[][] tiles;
-	private Figure[][] figures;
+	private Combatant[][] figures;
+	private Combatant nullC = new NullCombatant(new NullFigure(), -1);
 	private int height;
 	private int width;
 	
@@ -15,7 +16,7 @@ public class World {
 		this.height = _height > 0 ? _height : 1;
 		this.width = _width > 0 ? _width : 1;
 		this.tiles = new Icon[this.height][this.width];
-		this.figures = new Figure[this.height][this.width];
+		this.figures = new Combatant[this.height][this.width];
 		
 		this.setupWorld();
 	}
@@ -24,7 +25,7 @@ public class World {
 		for(int i = 0; i < this.height; i++){
 			for(int j = 0; j < this.width; j++){
 				this.tiles[i][j] = new Icon('w', AsciiPanel.brightGreen);
-				this.figures[i][j] = new NullFigure();
+				this.figures[i][j] = this.nullC;
 			}
 		}
 	}
@@ -37,19 +38,25 @@ public class World {
 	}
 	
 	public boolean isPathable(int x, int y){
-		return isInBounds(x, y) && this.figures[x][y].isNull();
+		return isInBounds(x, y) && this.figures[x][y].getForce() == -1;
 	}
 	
-	public boolean removeFigure(int x, int y){
-		if(this.isInBounds(x, y) && !this.figures[x][y].isNull()){
-			this.figures[x][y] = new NullFigure();
+	public Combatant combatantAt(int x, int y){
+		if(!this.isInBounds(x, y) || this.figures[x][y] == this.nullC)
+			return null;
+		return this.figures[x][y];
+	}
+	
+	public boolean removeCombatant(int x, int y){
+		if(this.isInBounds(x, y) && this.figures[x][y].getForce() != -1){
+			this.figures[x][y] = this.nullC;
 			
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean addFigure(Figure figure, int x, int y){
+	public boolean addCombatant(Combatant figure, int x, int y){
 		if(!this.isInBounds(x, y) || !this.isPathable(x, y))
 			return false;
 		
@@ -62,7 +69,7 @@ public class World {
 		for(int i = 0; i < this.height; i++){
 			for(int j = 0; j < this.width; j++){
 				this.tiles[i][j].printToTerminal(terminal, i+x, j+y);
-				this.figures[i][j].printToTerminal(terminal, i+x, j+y);
+				this.figures[i][j].getFigure().printToTerminal(terminal, i+x, j+y);
 			}
 		}
 	}

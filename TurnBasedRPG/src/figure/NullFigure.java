@@ -11,6 +11,4 @@ public class NullFigure extends Figure {
 
 	@Override
 	public void printToTerminal(AsciiPanel _terminal, int _x, int _y) {}
-	@Override
-	public boolean isNull(){return true;}
 }

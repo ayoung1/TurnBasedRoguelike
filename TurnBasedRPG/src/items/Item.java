@@ -1,5 +1,7 @@
 package items;
 
+import screens.Screen;
+
 public abstract class Item {
 	private String name;
 	
@@ -11,5 +13,5 @@ public abstract class Item {
 	public String getName(){return this.name;}
 	
 	public abstract String listView();
-	public abstract void view();
+	public abstract Screen view();
 }

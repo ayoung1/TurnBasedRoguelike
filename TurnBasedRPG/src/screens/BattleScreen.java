@@ -34,30 +34,30 @@ public class BattleScreen implements Screen{
 	private void displayGraphics(AsciiPanel terminal){
 		this.offset = (terminal.getWidthInCharacters()/4);
 		
-		this.displayBorders(terminal);
+		this.world.printToTerminal(terminal, this.offset, 1);
+		this.displayBorders(terminal, 0, 0);
+		this.displayBorders(terminal, this.offset + this.world.getWidth(), 0);
 		this.displayTurnOrder(terminal);
 		
 		if(this.subscreen == null)
 			this.displayOptions(terminal);
-		
-		this.world.printToTerminal(terminal, this.offset, 1);
 	}
 	
-	private void displayBorders(AsciiPanel terminal){
-		int width = this.offset-1;
+	private void displayBorders(AsciiPanel terminal, int x, int y){
+		int width = x + (this.offset-1);
 		int height = terminal.getHeightInCharacters()-1;
 		
-		terminal.write((char)201, 0, 0);
-		terminal.write((char)187, width, 0);
+		terminal.write((char)201, x, y);
+		terminal.write((char)187, width, y);
 		terminal.write((char)188, width, height);
-		terminal.write((char)200, 0, height);
+		terminal.write((char)200, x, height);
 		
-		for(int i = 1; i < width; i++){
-			terminal.write((char)205, i, 0);
+		for(int i = x+1; i < width; i++){
+			terminal.write((char)205, i, y);
 			terminal.write((char)205, i, height);
 		}
 		for(int i = 1; i < height; i++){
-			terminal.write((char)186, 0, i);
+			terminal.write((char)186, x, i);
 			terminal.write((char)186, width, i);
 		}
 	}

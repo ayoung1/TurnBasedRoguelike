@@ -10,6 +10,7 @@ public class ActionScreen implements Screen{
 
 	private World world;
 	private Combatant combatant;
+	private Screen subscreen;
 	private int offset;
 	
 	public ActionScreen(Combatant combatant, World world, int offset){
@@ -43,11 +44,27 @@ public class ActionScreen implements Screen{
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
 		this.displayOptions(terminal);
+		
+		if(this.subscreen != null)
+			this.subscreen.displayOutput(terminal);
 	}
 
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
-		return null;
+		if(this.subscreen != null){
+			this.subscreen = this.subscreen.respondToUserInput(key);
+		}
+		else{
+			if(key.getKeyCode() == KeyEvent.VK_F){
+				this.subscreen = new FightScreen(this.combatant, this.world, this.offset);
+			}
+			
+			if(key.getKeyCode() == KeyEvent.VK_ESCAPE)
+				return null;
+		}
+		if(!this.combatant.hasAction())
+			return null;
+		return this;
 	}
 
 }
