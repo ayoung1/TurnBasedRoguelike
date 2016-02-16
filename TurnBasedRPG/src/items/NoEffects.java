@@ -2,9 +2,9 @@ package items;
 
 import figure.Figure;
 
-public class NoEffects extends Equip {
+public class NoEffects extends Modification {
 	@Override
-	public void onEquip(Figure figure) {}
+	public void onApply(Figure figure) {}
 	@Override
-	public void onUnequip(Figure figure) {}
+	public void onRemove(Figure figure) {}
 }

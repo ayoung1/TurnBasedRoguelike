@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 
 import asciiPanel.AsciiPanel;
 import figure.Combatant;
+import figure.Figure.Stat;
 import icon.Cursor;
 import icon.Icon;
 import trig.Trig;
@@ -15,6 +16,7 @@ public class MoveScreen implements Screen{
 	private World world;
 	private Cursor cursor;
 	private int offset;
+	private double movement;
 
 	public MoveScreen(Combatant combatant, World world, int offset){
 		assert(combatant != null);
@@ -24,27 +26,27 @@ public class MoveScreen implements Screen{
 		this.world = world;
 		this.offset = offset;
 		this.cursor = new Cursor(new Icon('X', AsciiPanel.brightRed), this.world, this.combatant.getX(), this.combatant.getY());
+		this.cursor.update(null);
+		this.movement = this.combatant.getFigure().getStat(Stat.MOV);
 	}
 	
 	private void displayRange(AsciiPanel terminal){
-		double movement = this.combatant.getFigure().getMovement();
 		int x = this.combatant.getX();
 		int y = this.combatant.getY();
 		
 		for(int i = 0; i < world.getWidth(); i++){
 			for(int j = 0; j < this.world.getHeight(); j++){
-				if(world.isPathable(i, j) && Trig.distanceBetweenPoints(x, y, i, j) <= movement)
+				if(world.isPathable(i, j) && Trig.distanceBetweenPoints(x, y, i, j) <= this.movement)
 					terminal.write((char)178, i+this.offset, j+1, AsciiPanel.white);
 			}
 		}
 	}
 	
 	private void moveCombatant(){
-		double movement = this.combatant.getFigure().getMovement();
 		int x = this.combatant.getX();
 		int y = this.combatant.getY();
 		
-		if(Trig.distanceBetweenPoints(x, y, this.cursor.getX(), this.cursor.getY()) <= movement)
+		if(Trig.distanceBetweenPoints(x, y, this.cursor.getX(), this.cursor.getY()) <= this.movement)
 			this.combatant.move(this.world, this.cursor.getX(), this.cursor.getY());
 	}
 	
@@ -73,10 +75,17 @@ public class MoveScreen implements Screen{
 		terminal.write("esc:return", offset, height+3);
 	}
 	
+	private void displayCursorInformation(AsciiPanel terminal){
+		Combatant c = this.world.combatantAt(this.cursor.getX(), this.cursor.getY());
+		if(c != null)
+			c.displayInformation(terminal, (this.offset*3)+1, 1);
+	}
+	
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
 		this.displayRange(terminal);
 		this.displayInstructions(terminal);
+		this.displayCursorInformation(terminal);
 		this.cursor.printToTerminal(terminal, this.cursor.getX() + this.offset, this.cursor.getY()+1);
 	}
 

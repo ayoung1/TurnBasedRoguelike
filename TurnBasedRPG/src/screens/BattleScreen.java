@@ -46,20 +46,7 @@ public class BattleScreen implements Screen{
 	private void displayBorders(AsciiPanel terminal, int x, int y){
 		int width = x + (this.offset-1);
 		int height = terminal.getHeightInCharacters()-1;
-		
-		terminal.write((char)201, x, y);
-		terminal.write((char)187, width, y);
-		terminal.write((char)188, width, height);
-		terminal.write((char)200, x, height);
-		
-		for(int i = x+1; i < width; i++){
-			terminal.write((char)205, i, y);
-			terminal.write((char)205, i, height);
-		}
-		for(int i = 1; i < height; i++){
-			terminal.write((char)186, x, i);
-			terminal.write((char)186, width, i);
-		}
+		GameEngine.displayBorders(x, y, width, height);
 	}
 	
 	private void displayOptions(AsciiPanel terminal){		
@@ -79,6 +66,8 @@ public class BattleScreen implements Screen{
 		}
 		
 		terminal.write("e:end turn", offset, this.height+2);
+		terminal.write("l:look", this.offset+3, this.height+3);
+		terminal.write("esc:menu", this.offset+10, this.height+3);
 	}
 	
 	private void displayTurnOrder(AsciiPanel terminal){
@@ -96,6 +85,7 @@ public class BattleScreen implements Screen{
 		this.turn = this.combatants.peek();
 		
 		this.displayGraphics(terminal);
+		
 		if(this.subscreen != null)
 			this.subscreen.displayOutput(terminal);
 	}
@@ -109,6 +99,10 @@ public class BattleScreen implements Screen{
 				this.subscreen = new MoveScreen(this.turn, this.world, this.offset);
 			if(this.turn.hasAction() && key.getKeyCode() == KeyEvent.VK_A)
 				this.subscreen = new ActionScreen(this.turn, this.world, this.offset);
+			if(key.getKeyCode() == KeyEvent.VK_L)
+				this.subscreen = new LookScreen(this.turn, this.world, this.offset);
+			if(key.getKeyCode() == KeyEvent.VK_ESCAPE)
+				this.subscreen = new MenuScreen();
 			if(key.getKeyCode() == KeyEvent.VK_E){
 				this.combatants.add(this.combatants.remove());
 				this.combatants.peek().startTurn();

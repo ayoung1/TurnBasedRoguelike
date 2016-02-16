@@ -45,14 +45,17 @@ public class FightScreen implements Screen {
 		}
 	}
 	
+	private void displayCursorInformation(AsciiPanel terminal){
+		Combatant c = this.world.combatantAt(this.cursor.getX(), this.cursor.getY());
+		if(c != null)
+			c.displayInformation(terminal, (this.offset*3)+1, 1);
+	}
+	
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
-		Combatant c = this.world.combatantAt(this.cursor.getX(), this.cursor.getY());
 		this.displayRange(terminal);
-		
+		this.displayCursorInformation(terminal);
 		this.cursor.printToTerminal(terminal, this.cursor.getX() + this.offset, this.cursor.getY()+1);
-		if(c != null)
-			c.displayInformation(terminal, this.offset*3, 1);
 	}
 
 	@Override

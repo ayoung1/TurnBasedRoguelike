@@ -7,7 +7,7 @@ import figure.Figure;
 
 public class GameEngine {
 
-	private AsciiPanel terminal;
+	private static AsciiPanel terminal;
 	private ArrayList<Figure> party;
 	private static GameEngine gameEngine = new GameEngine();
 	
@@ -16,11 +16,27 @@ public class GameEngine {
 	}
 	
 	public static ArrayList<Figure> getParty(){return gameEngine.party;}
-	public static AsciiPanel getTerminal(){return gameEngine.terminal;}
+	public static AsciiPanel getTerminal(){return GameEngine.terminal;}
+	
+	public static void displayBorders(int x, int y, int x2, int y2){
+		terminal.write((char)201, x, y);
+		terminal.write((char)187, x2, y);
+		terminal.write((char)188, x2, y2);
+		terminal.write((char)200, x, y2);
+		
+		for(int i = x+1; i < x2; i++){
+			terminal.write((char)205, i, y);
+			terminal.write((char)205, i, y2);
+		}
+		for(int i = y+1; i < y2; i++){
+			terminal.write((char)186, x, i);
+			terminal.write((char)186, x2, i);
+		}
+	}
 	
 	public static void setTerminal(AsciiPanel terminal){
 		assert(terminal != null);
-		gameEngine.terminal = terminal;
+		GameEngine.terminal = terminal;
 	}
 	
 	public static void removeFromParty(Figure figure){

@@ -2,6 +2,7 @@ package figure;
 
 import java.util.Random;
 
+import figure.Figure.Stat;
 import asciiPanel.AsciiPanel;
 import screens.Printable;
 import world.World;
@@ -21,6 +22,8 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	private int priority;
 	private int x;
 	private int y;
+	private int curHealth;
+	private int curEnergy;
 	
 	public Combatant(Figure _figure, int _force){
 		assert(_figure != null);
@@ -29,6 +32,8 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		this.priority = 0;
 		this.hasAction = false;
 		this.hasMove = false;
+		this.curHealth = this.figure.getMaxHealth();
+		this.curEnergy = this.figure.getMaxEnergy();
 	}
 	
 	public Figure getFigure(){return this.figure;}
@@ -66,7 +71,10 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	}
 	
 	public void takeDamage(Combatant attacker){
+		double multiplier = 100 / (100 + this.figure.getStat(Stat.ARMOR));
+		int damage = (int) (attacker.getFigure().calculateDamage() * multiplier);
 		
+		this.curHealth -= damage;
 	}
 	
 	public void action(Action action, Combatant target){
@@ -86,11 +94,27 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	}
 	
 	public void displayInformation(AsciiPanel terminal, int x, int y){
-		terminal.write(this.figure.getName(), x+1, y);
+		terminal.write(this.figure.getName(), x, y++);
 		if(this.force == 1)
-			terminal.write("Ally", x+1, y+1);
+			terminal.write("Ally", x, y++);
 		else
-			terminal.write("Enemy", x+1, y+1);
+			terminal.write("Enemy", x, y++);
+		
+		y++;
+		
+		terminal.write("Health: " + this.curHealth + "/" + this.figure.getMaxHealth(), x, y++);
+		terminal.write("Energy: " + this.curEnergy + "/" + this.figure.getMaxEnergy(), x, y++);
+		
+		y++;
+		
+		for(Stat stat : Stat.values())
+			terminal.write(stat.getName() + ": " + this.figure.getStat(stat), x, y++);
+		
+		y++;
+		
+		terminal.write("Equipment:", x++, y++);
+		terminal.write("Mainhand: " + this.figure.getMainhand().getName(), x, y++);
+		terminal.write("Offhand: " + this.figure.getOffhand().getName(), x, y++);
 	}
 	
 	@Override

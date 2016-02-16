@@ -5,31 +5,40 @@ import screens.Screen;
 public class Weapon extends Item {
 
 	public enum Type{
-		FLESH("Flesh"),
-		SWORD("Sword"),
-		AXE("Axe"),
-		BOW("Bow"),
-		STAFF("Staff"),
-		SHIELD("Shield");
+		FLESH("Flesh", 1),
+		SWORD("Sword", 1),
+		AXE("Axe", 1),
+		SPEAR("Spear", 2),
+		BOW("Bow", 5),
+		STAFF("Staff", 2),
+		SHIELD("Shield", 1);
+		
 		private final String name;
-		private Type(String name){this.name = name;}
+		private final int range;
+		
+		private Type(String name, int range){
+			this.name = name;
+			this.range = range;
+		}
+		
 		public String toString(){return this.name;}
+		public int getRange(){return this.range;}
 	}
 	
 	private final Type type;
 	private final int range;
-	private final Equip equip;
+	private final Modification equip;
 	
-	public Weapon(String name, Type type, int range, Equip equip) {
+	public Weapon(String name, Type type, Modification equip) {
 		super(name);
 		this.type = type;
-		this.range = range;
+		this.range = type.range;
 		this.equip = equip;
 	}
 
 	public Type getType(){return this.type;}
 	public int getRange(){return this.range;}
-	public Equip getEquip(){return this.equip;}
+	public Modification getEquip(){return this.equip;}
 	
 	@Override
 	public String listView() {

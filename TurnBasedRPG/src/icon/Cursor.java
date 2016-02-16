@@ -21,14 +21,16 @@ public class Cursor extends Icon{
 	public int getY(){return this.y;}
 	
 	public void update(KeyEvent key){
-		if(key.getKeyCode() == KeyEvent.VK_W)
-			this.update(0, -1);
-		if(key.getKeyCode() == KeyEvent.VK_S)
-			this.update(0, 1);
-		if(key.getKeyCode() == KeyEvent.VK_D)
-			this.update(1, 0);
-		if(key.getKeyCode() == KeyEvent.VK_A)
-			this.update(-1, 0);
+		if(key != null){
+			if(key.getKeyCode() == KeyEvent.VK_W)
+				this.update(0, -1);
+			if(key.getKeyCode() == KeyEvent.VK_S)
+				this.update(0, 1);
+			if(key.getKeyCode() == KeyEvent.VK_D)
+				this.update(1, 0);
+			if(key.getKeyCode() == KeyEvent.VK_A)
+				this.update(-1, 0);
+		}
 	}
 	
 	private void update(int dx, int dy){
