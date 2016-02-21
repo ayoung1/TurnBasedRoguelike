@@ -1,17 +1,14 @@
 package screens;
 
 import icon.Icon;
-import world.World;
 
 public class Cursor extends Icon{
 
-	private World world;
 	private int x;
 	private int y;
 	
-	public Cursor(Icon icon, World world, int x, int y) {
+	public Cursor(Icon icon, int x, int y) {
 		super(icon.getCharacter(), icon.getColor());
-		this.world = world;
 		this.x = x;
 		this.y = y;
 	}

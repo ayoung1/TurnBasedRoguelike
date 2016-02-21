@@ -2,7 +2,22 @@ package items;
 
 import figure.Figure;
 
-public abstract class Modification {
-	public abstract void onApply(Figure figure);
-	public abstract void onRemove(Figure figure);
+public class Modification {
+	private StatVal[] statVals;
+	
+	public Modification(StatVal ... statVals){
+		this.statVals = statVals;
+	}
+	
+	public void onApply(Figure figure){
+		for(StatVal s : this.statVals){
+			figure.modifyStat(s.stat, s.value);
+		}
+	}
+	
+	public void onRemove(Figure figure){
+		for(StatVal s : this.statVals){
+			figure.modifyStat(s.stat, -s.value);
+		}
+	}
 }

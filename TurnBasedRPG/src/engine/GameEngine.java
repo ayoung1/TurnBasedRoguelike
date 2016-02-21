@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import asciiPanel.AsciiPanel;
 import figure.Figure;
+import world.World;
 
 public class GameEngine {
 
 	private static AsciiPanel terminal;
+	private static World world;
 	private ArrayList<Figure> party;
 	private static GameEngine gameEngine = new GameEngine();
 	
@@ -17,6 +19,12 @@ public class GameEngine {
 	
 	public static ArrayList<Figure> getParty(){return gameEngine.party;}
 	public static AsciiPanel getTerminal(){return GameEngine.terminal;}
+	public static World getWorld(){return world;}
+	
+	public static World createWorld(int x, int y){
+		world = new World(x, y);
+		return world;
+	}
 	
 	public static void displayBorders(int x, int y, int x2, int y2){
 		terminal.write((char)201, x, y);

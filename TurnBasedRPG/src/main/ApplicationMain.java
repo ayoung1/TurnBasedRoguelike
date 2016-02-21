@@ -6,7 +6,13 @@ import java.awt.event.KeyListener;
 import javax.swing.JFrame;
 
 import engine.GameEngine;
+import figure.Figure;
+import figure.Figure.Stat;
 import figure.TestFigure;
+import figure.Warrior;
+import items.Modification;
+import items.StatVal;
+import items.Weapon;
 import screens.Screen;
 import screens.StartScreen;
 import asciiPanel.AsciiPanel;
@@ -30,8 +36,11 @@ public class ApplicationMain extends JFrame implements KeyListener{
 		
 		GameEngine.setTerminal(this.terminal);
 		
-		GameEngine.addToParty(new TestFigure());
-		GameEngine.addToParty(new TestFigure("Test2"));
+		Figure temp = new TestFigure(new Warrior());
+		
+		temp.equipMain(new Weapon("Sword", Weapon.Type.SWORD, true, new Modification(new StatVal(Stat.STR, 5))));
+		
+		GameEngine.addToParty(temp);
 	}
 	
 	public void repaint(){

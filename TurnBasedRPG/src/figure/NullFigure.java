@@ -6,13 +6,11 @@ import asciiPanel.AsciiPanel;
 public class NullFigure extends Figure {
 
 	public NullFigure() {
-		super("Null", new Icon(' ', AsciiPanel.white));
+		super("Null", new Icon(' ', AsciiPanel.white), new Warrior(), Gender.MALE);
 	}
 
 	@Override
 	public void printToTerminal(AsciiPanel _terminal, int _x, int _y) {}
-	@Override
-	protected void setupStats() {}
 
 	@Override
 	public int calculateDamage() {

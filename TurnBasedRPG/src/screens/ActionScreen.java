@@ -43,10 +43,11 @@ public class ActionScreen implements Screen{
 	
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
-		this.displayOptions(terminal);
 		
 		if(this.subscreen != null)
 			this.subscreen.displayOutput(terminal);
+		else
+			this.displayOptions(terminal);
 	}
 
 	@Override
@@ -56,8 +57,11 @@ public class ActionScreen implements Screen{
 		}
 		else{
 			if(key.getKeyCode() == KeyEvent.VK_F){
-				this.subscreen = new FightScreen(this.combatant, this.world, this.offset);
+				this.subscreen = new FightScreen(this.combatant, this.offset);
 			}
+			
+			if(key.getKeyCode() == KeyEvent.VK_S)
+				this.subscreen = new SkillScreen(this.combatant, this.world, this.offset);
 			
 			if(key.getKeyCode() == KeyEvent.VK_ESCAPE)
 				return null;

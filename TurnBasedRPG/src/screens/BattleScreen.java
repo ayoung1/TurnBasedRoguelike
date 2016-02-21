@@ -1,11 +1,16 @@
 package screens;
 
 import java.awt.event.KeyEvent;
-import java.util.PriorityQueue;
+import java.util.ArrayList;
 
 import engine.GameEngine;
 import figure.Combatant;
 import figure.Figure;
+import figure.TestFigure;
+import figure.Warrior;
+import figure.Figure.Stat;
+import items.Modification;
+import items.Weapon;
 import world.World;
 import asciiPanel.AsciiPanel;
 
@@ -15,20 +20,37 @@ public class BattleScreen implements Screen{
 	private int width = 40;
 	private int offset;
 	private World world;
-	private PriorityQueue<Combatant> combatants;
+	private ArrayList<Combatant> combatants;
 	private Combatant turn;
 	private Screen subscreen;
 	
 	public BattleScreen(){
-		this.world = new World(this.width, this.height);
-		this.combatants = new PriorityQueue<>();
+		this.world = GameEngine.createWorld(this.width, this.height);
+		this.combatants = new ArrayList<>();
+		
+		this.combatants.add(new Combatant(new TestFigure(new Warrior()), 2));
+		this.combatants.get(0).getFigure().equipMain(new Weapon("Bow", Weapon.Type.BOW, true, new Modification(){
+
+			@Override
+			public void onApply(Figure figure) {
+				figure.modifyStat(Stat.STR, 50);
+			}
+
+			@Override
+			public void onRemove(Figure figure) {
+				figure.modifyStat(Stat.STR, -50);
+			}
+			
+		}));
 		
 		for(Figure figure : GameEngine.getParty())
 			this.combatants.add(new Combatant(figure, 1));
+		for(Combatant c : this.combatants)
+			GameEngine.removeFromParty(c.getFigure());
 		for(Combatant combatant : this.combatants)
-			combatant.addToWorld(world);
+			combatant.addToWorld();
 		
-		this.combatants.peek().startTurn();
+		this.combatants.get(0).startTurn();
 	}
 	
 	private void displayGraphics(AsciiPanel terminal){
@@ -82,7 +104,7 @@ public class BattleScreen implements Screen{
 	
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
-		this.turn = this.combatants.peek();
+		this.turn = this.combatants.get(0);
 		
 		this.displayGraphics(terminal);
 		
@@ -90,8 +112,42 @@ public class BattleScreen implements Screen{
 			this.subscreen.displayOutput(terminal);
 	}
 
+	private void removedDead(){
+		int i = 0;
+		
+		do{
+			if(this.combatants.get(i).getLife() <= 0){
+				this.combatants.remove(i);
+				i = 0;
+			}else
+				i++;
+		}while(i < this.combatants.size());
+	}
+	
+	private int countForce(int force){
+		int count = 0;
+		
+		for(Combatant c : this.combatants){
+			if(c.getForce() == force)
+				count++;
+		}
+		return count;
+	}
+	
+	private boolean hasWon(){
+		return this.countForce(2) == 0;
+	}
+	
+	private boolean hasLost(){
+		return this.countForce(1) == 0;
+	}
+	
+	private void cleanup(){
+		
+	}
+	
 	@Override
-	public Screen respondToUserInput(KeyEvent key) {
+	public Screen respondToUserInput(KeyEvent key) {	
 		if(this.subscreen != null)
 			this.subscreen = this.subscreen.respondToUserInput(key);
 		else{
@@ -100,13 +156,19 @@ public class BattleScreen implements Screen{
 			if(this.turn.hasAction() && key.getKeyCode() == KeyEvent.VK_A)
 				this.subscreen = new ActionScreen(this.turn, this.world, this.offset);
 			if(key.getKeyCode() == KeyEvent.VK_L)
-				this.subscreen = new LookScreen(this.turn, this.world, this.offset);
+				this.subscreen = new LookScreen(this.turn, this.offset);
 			if(key.getKeyCode() == KeyEvent.VK_ESCAPE)
 				this.subscreen = new MenuScreen();
 			if(key.getKeyCode() == KeyEvent.VK_E){
-				this.combatants.add(this.combatants.remove());
-				this.combatants.peek().startTurn();
+				this.combatants.add(this.combatants.remove(0));
+				this.combatants.get(0).startTurn();
 			}
+		}
+		this.removedDead();
+		
+		if(this.hasWon() || this.hasLost()){
+			this.cleanup();
+			return null;
 		}
 		return this;
 	}

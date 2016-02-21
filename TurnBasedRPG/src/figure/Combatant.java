@@ -1,10 +1,13 @@
 package figure;
 
+import java.util.List;
 import java.util.Random;
 
 import figure.Figure.Stat;
 import asciiPanel.AsciiPanel;
+import engine.GameEngine;
 import screens.Printable;
+import skills.Skill;
 import world.World;
 
 public class Combatant implements Comparable<Combatant>, Printable{
@@ -16,8 +19,8 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	private static Random random = new Random(System.currentTimeMillis());
 	
 	private Figure figure;
-	private boolean hasMove;
-	private boolean hasAction;
+	private int moves;
+	private int actions;
 	private int force;
 	private int priority;
 	private int x;
@@ -30,51 +33,73 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		this.figure = _figure;
 		this.force = _force;
 		this.priority = 0;
-		this.hasAction = false;
-		this.hasMove = false;
+		this.actions = 0;
+		this.moves = 0;
 		this.curHealth = this.figure.getMaxHealth();
 		this.curEnergy = this.figure.getMaxEnergy();
 	}
 	
 	public Figure getFigure(){return this.figure;}
-	public boolean hasAction(){return this.hasAction;}
-	public boolean hasMove(){return this.hasMove;}
+	public boolean hasAction(){return this.actions > 0;}
+	public boolean hasMove(){return this.moves > 0;}
+	public int getLife(){return this.curHealth;}
+	public int getEnergy(){return this.curEnergy;}
 	public int getForce(){return this.force;}
 	public int getX(){return this.x;}
 	public int getY(){return this.y;}
 	
 	public void startTurn(){
-		this.hasAction = true;
-		this.hasMove = true;
+		if(this.actions > 0)
+			this.actions = 1;
+		else
+			this.actions++;
+		if(this.moves > 0)
+			this.moves = 1;
+		else
+			this.moves++;
 	}
 	
-	public void addToWorld(World world){
+	public void addToWorld(){
+		World world = GameEngine.getWorld();
 		do{
-			this.x = random.nextInt(world.getHeight());
-			this.y = random.nextInt(world.getWidth());
+			this.x = random.nextInt(world.getWidth());
+			this.y = random.nextInt(world.getHeight());
 		}while(!world.addCombatant(this, this.x, this.y));
 	}
 	
-	public void move(World world, int x, int y){
+	public void move(int x, int y){
+		World world = GameEngine.getWorld();
+		
 		world.removeCombatant(this.x, this.y);
 		this.x = x;
 		this.y = y;
 		world.addCombatant(this, this.x, this.y);
 		
-		this.hasMove = false;
+		this.moves--;
 	}
 	
 	private void attack(Combatant target){
-		target.takeDamage(this);
+		target.takeDamage(this, this.getFigure().calculateDamage());
 		
-		this.hasAction = false;
+		this.actions--;
 	}
 	
-	public void takeDamage(Combatant attacker){
+	public void takeDamage(Combatant attacker, int damage){
 		double multiplier = 100 / (100 + this.figure.getStat(Stat.ARMOR));
-		int damage = (int) (attacker.getFigure().calculateDamage() * multiplier);
+		damage *= (int) multiplier;
 		
 		this.curHealth -= damage;
+		
+		if(this.curHealth <= 0)
+			GameEngine.getWorld().removeCombatant(this.x, this.y);			
+	}
+	
+	public void useSkill(Skill skill, List<Combatant> targets){
+		if(this.curEnergy < skill.getCost())
+			return;
+		this.actions--;
+		for(Combatant c : targets)
+			skill.onCast(this, c);
 	}
 	
 	public void action(Action action, Combatant target){
@@ -90,11 +115,12 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	}
 	
 	public boolean isTurnOver(){
-		return !this.hasAction && !this.hasMove;
+		return !this.hasAction() && !this.hasMove();
 	}
 	
 	public void displayInformation(AsciiPanel terminal, int x, int y){
 		terminal.write(this.figure.getName(), x, y++);
+		terminal.write(this.figure.getJob().getName(), x, y++);
 		if(this.force == 1)
 			terminal.write("Ally", x, y++);
 		else
@@ -108,7 +134,7 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		y++;
 		
 		for(Stat stat : Stat.values())
-			terminal.write(stat.getName() + ": " + this.figure.getStat(stat), x, y++);
+			terminal.write(stat.name + ": " + this.figure.getStat(stat), x, y++);
 		
 		y++;
 		

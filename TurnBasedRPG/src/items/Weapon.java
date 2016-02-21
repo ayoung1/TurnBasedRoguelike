@@ -28,17 +28,20 @@ public class Weapon extends Item {
 	private final Type type;
 	private final int range;
 	private final Modification equip;
+	private final boolean isTwoHand;
 	
-	public Weapon(String name, Type type, Modification equip) {
+	public Weapon(String name, Type type, boolean isTwoHand, Modification equip) {
 		super(name);
 		this.type = type;
 		this.range = type.range;
 		this.equip = equip;
+		this.isTwoHand = isTwoHand;
 	}
 
 	public Type getType(){return this.type;}
 	public int getRange(){return this.range;}
 	public Modification getEquip(){return this.equip;}
+	public boolean isTwoHand(){return this.isTwoHand;}
 	
 	@Override
 	public String listView() {
