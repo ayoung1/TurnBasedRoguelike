@@ -1,6 +1,7 @@
 package skills;
 
 import figure.Combatant;
+import figure.Figure;
 
 public abstract class Skill {
 
@@ -25,4 +26,8 @@ public abstract class Skill {
 	public boolean isTargeted(){return this.targeted;}
 	
 	public abstract void onCast(Combatant caster, Combatant target);
+	public abstract void onHit(Combatant attacker, Combatant attacked);
+	public abstract void onTakeDamage(Combatant attacked, Combatant attacker);
+	public abstract void onAquire(Figure figure);
+	public abstract void onLoss(Figure figure);
 }

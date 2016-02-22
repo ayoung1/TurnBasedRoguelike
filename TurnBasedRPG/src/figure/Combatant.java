@@ -79,6 +79,9 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	}
 	
 	private void attack(Combatant target){
+		for(Skill s : this.getFigure().getJob().getSkills())
+			s.onHit(this, target);
+		
 		target.takeDamage(this, this.getFigure().calculateDamage());
 		
 		this.actions--;
@@ -86,6 +89,9 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	
 	public void takeDamage(Combatant attacker, int damage){
 		double multiplier = 100 / (100 + this.figure.getStat(Stat.ARMOR));
+		for(Skill s : this.getFigure().getJob().getSkills())
+			s.onTakeDamage(this, attacker);
+		
 		damage *= (int) multiplier;
 		
 		this.curHealth -= damage;

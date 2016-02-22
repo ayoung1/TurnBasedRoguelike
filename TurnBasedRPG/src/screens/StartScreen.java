@@ -19,7 +19,7 @@ public class StartScreen implements Screen{
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
 		if(this.subscreen == null)
-			this.subscreen = key.getKeyCode() == KeyEvent.VK_ENTER ? new BattleScreen() : null;
+			this.subscreen = key.getKeyCode() == KeyEvent.VK_ENTER ? new CharacterCreationScreen() : null;
 		else
 			this.subscreen = this.subscreen.respondToUserInput(key);	
 		return this;

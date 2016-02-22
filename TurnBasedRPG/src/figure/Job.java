@@ -12,6 +12,7 @@ import skills.Skill;
 public abstract class Job{
 
 	private String name;
+	private Figure figure;
 	private ArrayList<Type> weapons;
 	private ArrayList<Skill> skills;
 	
@@ -27,14 +28,26 @@ public abstract class Job{
 	public String getName(){return this.name;}
 	public ArrayList<Skill> getSkills(){return this.skills;}
 	
+	public void setFigure(Figure figure){
+		assert(figure != null);
+		this.figure = figure;
+	}
+	
 	public void addWeaponTypes(Type ... types){
 		for(Type t : types)
 			this.weapons.add(t);
 	}
 	
+	public void removeSkill(Skill skill){
+		this.skills.remove(skill);
+		skill.onLoss(this.figure);
+	}
+	
 	public void addSkills(Skill ... skill){
-		for(Skill s : skill)
+		for(Skill s : skill){
 			this.skills.add(s);
+			s.onAquire(this.figure);
+		}
 	}
 	
 	public boolean canEquip(Weapon weapon){

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import figure.Figure.Stat;
 import items.Weapon.Type;
-import skills.Skill;
+import skills.warrior.*;
 
 public class Warrior extends Job {
 
@@ -14,16 +14,7 @@ public class Warrior extends Job {
 		super("Warrior");
 		this.addWeaponTypes(Type.SWORD, Type.AXE, Type.SPEAR, Type.SHIELD);
 		
-		Skill skill = new Skill("Power Strike", 70, 0, 1, true){
-			@Override
-			public void onCast(Combatant caster, Combatant target) {
-				int damage = caster.getFigure().getStat(Stat.STR);
-				damage *= 2.0;
-				target.takeDamage(caster, damage);
-			}
-		};
-		
-		this.addSkills(skill);
+		this.addSkills(new PowerStrike());
 	}
 
 	public void setFigure(Figure figure){this.figure = figure;}
