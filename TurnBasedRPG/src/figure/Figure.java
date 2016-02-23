@@ -6,8 +6,7 @@ import asciiPanel.AsciiPanel;
 import icon.Icon;
 import items.*;
 
-public abstract
-class Figure{
+public class Figure{
 	public enum Gender{
 		MALE("Male"),
 		FEMALE("Female");
@@ -52,6 +51,7 @@ class Figure{
 		this.gender = gender;
 		this.icon = _icon;
 		this.job = job;
+		this.job.setFigure(this);
 		this.mainhand = new Unarmed();
 		this.offhand = new Unarmed();
 		this.canDualWield = false;

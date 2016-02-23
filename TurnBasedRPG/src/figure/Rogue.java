@@ -6,13 +6,13 @@ import java.util.Map;
 import figure.Figure.Stat;
 import items.Weapon.Type;
 
-public class Warrior extends Job {
+public class Rogue extends Job {
 
 	private Figure figure;
 	
-	public Warrior() {
-		super("Warrior");
-		this.addWeaponTypes(Type.SWORD, Type.AXE, Type.SPEAR, Type.SHIELD);
+	public Rogue() {
+		super("Rogue");
+		this.addWeaponTypes(Type.DAGGER, Type.BOW);
 	}
 
 	public void setFigure(Figure figure){this.figure = figure;}
@@ -21,12 +21,12 @@ public class Warrior extends Job {
 	public Map<Stat, Integer> baseStats(){
 		Map<Stat, Integer> map = super.baseStats();
 		
-		map.put(Stat.STR, 5);
-		map.put(Stat.CON, 5);
-		map.put(Stat.DEX, 5);
-		map.put(Stat.INT, 5);
-		map.put(Stat.WIS, 5);
-		map.put(Stat.MOV, 3);
+		map.put(Stat.STR, 2);
+		map.put(Stat.CON, 3);
+		map.put(Stat.DEX, 7);
+		map.put(Stat.INT, 2);
+		map.put(Stat.WIS, 1);
+		map.put(Stat.MOV, 4);
 		map.put(Stat.ARMOR, 0);
 	
 		return map;
@@ -36,9 +36,9 @@ public class Warrior extends Job {
 	public Map<Stat, Integer> statGrowth(){
 		Map<Stat, Integer> map = new HashMap<Stat, Integer>();
 		
-		map.put(Stat.STR, 4);
-		map.put(Stat.CON, 3);
-		map.put(Stat.DEX, 1);
+		map.put(Stat.STR, 2);
+		map.put(Stat.CON, 1);
+		map.put(Stat.DEX, 3);
 		map.put(Stat.INT, 1);
 		map.put(Stat.WIS, 1);
 		map.put(Stat.MOV, 0);
@@ -49,11 +49,11 @@ public class Warrior extends Job {
 	
 	@Override
 	public int calculateDamage() {
-		return (int) (this.figure.getStat(Stat.STR) * 1.4);
+		return (int) ((this.figure.getStat(Stat.STR) + this.figure.getStat(Stat.DEX)) / 1.3);
 	}
 
 	@Override
 	public int getMaxEnergy() {
-		return (int)(this.figure.getStat(Stat.CON) * 1.2);
+		return (int)(this.figure.getStat(Stat.DEX) * 1.7);
 	}
 }

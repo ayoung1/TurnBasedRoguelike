@@ -8,6 +8,7 @@ import java.util.Map;
 import engine.GameEngine;
 import figure.*;
 import figure.Figure.Stat;
+import icon.Icon;
 import asciiPanel.AsciiPanel;
 
 public class CharacterCreationScreen implements Screen {
@@ -26,6 +27,7 @@ public class CharacterCreationScreen implements Screen {
 	public CharacterCreationScreen(){
 		this.jobs = new ArrayList<>();
 		this.jobs.add(new Warrior());
+		this.jobs.add(new Rogue());
 	}
 	
 	private void setupBorders(){
@@ -34,10 +36,10 @@ public class CharacterCreationScreen implements Screen {
 		GameEngine.displayBorders(third, 0, twoThird, 5);
 		GameEngine.displayBorders(third, 6, twoThird, 11);
 		GameEngine.displayBorders(third, 12, twoThird, 17);
-		GameEngine.displayBorders(third, 18, twoThird, GameEngine.getTerminal().getHeightInCharacters()-1);
+		GameEngine.displayBorders(third, 18, twoThird, GameEngine.getTerminal().getHeightInCharacters()-2);
 		
 		if(this.userInputName.length() > 0 && this.gender != null && this.job != null)
-			;
+			GameEngine.getTerminal().writeCenter("Enter: Submit", 20);
 	}
 	
 	private void displayJobInformation(AsciiPanel terminal){
@@ -48,11 +50,12 @@ public class CharacterCreationScreen implements Screen {
 			return;
 		height++;
 		terminal.write("Name: " + this.job.getName(), twoThird+3, height++);
-		terminal.write("Base Stats: " + this.job.getName(), twoThird+3, height++);
+		terminal.write("Base Stats: ", twoThird+3, height++);
 		Map<Stat, Integer> list = this.job.baseStats();
+		Map<Stat, Integer> growth = this.job.statGrowth();
 		
 		for(Stat s : Figure.Stat.values())
-			terminal.write(s.name + ": " + list.get(s), twoThird+4, height++);
+			terminal.write(s.name + ": " + list.get(s) + " + " + growth.get(s), twoThird+4, height++);
 	}
 	
 	private void displayJobs(AsciiPanel terminal){
@@ -88,8 +91,12 @@ public class CharacterCreationScreen implements Screen {
 	private Screen submitCharacter(){
 		if(this.userInputName.length() > 0 &&
 				this.gender != null &&
-				this.job != null)
+				this.job != null){
+			Figure figure = new Figure(this.userInputName, new Icon(this.job.getName().charAt(0), AsciiPanel.brightCyan), this.job, this.gender);
+			GameEngine.addToParty(figure);
+			GameEngine.addMainFigure(figure);
 			return new BattleScreen();
+		}
 		
 		return this;
 	}

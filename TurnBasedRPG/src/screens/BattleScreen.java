@@ -2,15 +2,15 @@ package screens;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import engine.GameEngine;
 import figure.Combatant;
 import figure.Figure;
+import figure.Figure.Stat;
 import figure.TestFigure;
 import figure.Warrior;
-import figure.Figure.Stat;
-import items.Modification;
-import items.Weapon;
 import world.World;
 import asciiPanel.AsciiPanel;
 
@@ -20,7 +20,7 @@ public class BattleScreen implements Screen{
 	private int width = 40;
 	private int offset;
 	private World world;
-	private ArrayList<Combatant> combatants;
+	private List<Combatant> combatants;
 	private Combatant turn;
 	private Screen subscreen;
 	
@@ -29,19 +29,7 @@ public class BattleScreen implements Screen{
 		this.combatants = new ArrayList<>();
 		
 		this.combatants.add(new Combatant(new TestFigure(new Warrior()), 2));
-		this.combatants.get(0).getFigure().equipMain(new Weapon("Bow", Weapon.Type.BOW, true, new Modification(){
-
-			@Override
-			public void onApply(Figure figure) {
-				figure.modifyStat(Stat.STR, 50);
-			}
-
-			@Override
-			public void onRemove(Figure figure) {
-				figure.modifyStat(Stat.STR, -50);
-			}
-			
-		}));
+		this.combatants.get(0).getFigure().modifyStat(Stat.DEX, -10);
 		
 		for(Figure figure : GameEngine.getParty())
 			this.combatants.add(new Combatant(figure, 1));
@@ -49,6 +37,8 @@ public class BattleScreen implements Screen{
 			GameEngine.removeFromParty(c.getFigure());
 		for(Combatant combatant : this.combatants)
 			combatant.addToWorld();
+		
+		Collections.sort(this.combatants);
 		
 		this.combatants.get(0).startTurn();
 	}
@@ -139,11 +129,18 @@ public class BattleScreen implements Screen{
 	}
 	
 	private boolean hasLost(){
-		return this.countForce(1) == 0;
+		boolean isMainCharacterAlive = false;
+		for(Combatant c : this.combatants){
+			if(!isMainCharacterAlive)
+				isMainCharacterAlive = c.getFigure() == GameEngine.getMainFigure();
+		}
+		
+		return !isMainCharacterAlive;
 	}
 	
 	private void cleanup(){
-		
+		for(Combatant c : this.combatants)
+			GameEngine.addToParty(c.getFigure());
 	}
 	
 	@Override

@@ -5,6 +5,8 @@ import java.util.Random;
 
 import figure.Figure.Stat;
 import asciiPanel.AsciiPanel;
+import damage.Damage;
+import damage.Damage.Type;
 import engine.GameEngine;
 import screens.Printable;
 import skills.Skill;
@@ -22,7 +24,6 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	private int moves;
 	private int actions;
 	private int force;
-	private int priority;
 	private int x;
 	private int y;
 	private int curHealth;
@@ -32,7 +33,6 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		assert(_figure != null);
 		this.figure = _figure;
 		this.force = _force;
-		this.priority = 0;
 		this.actions = 0;
 		this.moves = 0;
 		this.curHealth = this.figure.getMaxHealth();
@@ -47,6 +47,13 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	public int getForce(){return this.force;}
 	public int getX(){return this.x;}
 	public int getY(){return this.y;}
+	
+	private int calculatePriority(){
+		int pri = this.figure.getStat(Stat.DEX) + this.figure.getStat(Stat.MOV);
+		pri = pri / 2;
+		
+		return (int)pri;
+	}
 	
 	public void startTurn(){
 		if(this.actions > 0)
@@ -82,19 +89,20 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		for(Skill s : this.getFigure().getJob().getSkills())
 			s.onHit(this, target);
 		
-		target.takeDamage(this, this.getFigure().calculateDamage());
+		target.takeDamage(this, new Damage(this.getFigure().calculateDamage(), Type.PHYSICAL));
 		
 		this.actions--;
 	}
 	
-	public void takeDamage(Combatant attacker, int damage){
+	public void takeDamage(Combatant attacker, Damage damage){
 		double multiplier = 100 / (100 + this.figure.getStat(Stat.ARMOR));
+		int d = damage.damage;
 		for(Skill s : this.getFigure().getJob().getSkills())
-			s.onTakeDamage(this, attacker);
+			s.onTakeDamage(this, attacker, damage.type);
 		
-		damage *= (int) multiplier;
+		d *= (int) multiplier;
 		
-		this.curHealth -= damage;
+		this.curHealth -= d;
 		
 		if(this.curHealth <= 0)
 			GameEngine.getWorld().removeCombatant(this.x, this.y);			
@@ -151,7 +159,7 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	
 	@Override
 	public int compareTo(Combatant arg0) {
-		return this.priority - arg0.priority;
+		return arg0.calculatePriority() - this.calculatePriority();
 	}
 
 	@Override

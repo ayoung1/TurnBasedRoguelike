@@ -10,8 +10,13 @@ public class GameEngine {
 
 	private static AsciiPanel terminal;
 	private static World world;
+	private static GameEngine gameEngine;
+	private Figure mainCharacter;
 	private ArrayList<Figure> party;
-	private static GameEngine gameEngine = new GameEngine();
+	
+	public static void startEngine(){
+		gameEngine = new GameEngine();
+	}
 	
 	private GameEngine(){
 		this.party = new ArrayList<Figure>();
@@ -20,6 +25,12 @@ public class GameEngine {
 	public static ArrayList<Figure> getParty(){return gameEngine.party;}
 	public static AsciiPanel getTerminal(){return GameEngine.terminal;}
 	public static World getWorld(){return world;}
+	public static Figure getMainFigure(){return gameEngine.mainCharacter;}
+	
+	public static void addMainFigure(Figure figure){
+		assert(figure != null);
+		gameEngine.mainCharacter = figure;
+	}
 	
 	public static World createWorld(int x, int y){
 		world = new World(x, y);

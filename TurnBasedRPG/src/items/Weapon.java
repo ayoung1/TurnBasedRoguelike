@@ -6,6 +6,7 @@ public class Weapon extends Item {
 
 	public enum Type{
 		FLESH("Flesh", 1),
+		DAGGER("Dagger", 1),
 		SWORD("Sword", 1),
 		AXE("Axe", 1),
 		SPEAR("Spear", 2),

@@ -1,5 +1,6 @@
 package skills;
 
+import damage.Damage;
 import figure.Combatant;
 import figure.Figure;
 
@@ -27,7 +28,7 @@ public abstract class Skill {
 	
 	public abstract void onCast(Combatant caster, Combatant target);
 	public abstract void onHit(Combatant attacker, Combatant attacked);
-	public abstract void onTakeDamage(Combatant attacked, Combatant attacker);
+	public abstract void onTakeDamage(Combatant attacked, Combatant attacker, Damage.Type type);
 	public abstract void onAquire(Figure figure);
 	public abstract void onLoss(Figure figure);
 }

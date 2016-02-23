@@ -54,6 +54,20 @@ public abstract class Job{
 		return this.weapons.contains(weapon.getType());
 	}
 	
+	public Map<Stat, Integer> statGrowth(){
+		Map<Stat, Integer> map = new HashMap<Stat, Integer>();
+		
+		map.put(Stat.STR, 0);
+		map.put(Stat.CON, 0);
+		map.put(Stat.DEX, 0);
+		map.put(Stat.INT, 0);
+		map.put(Stat.WIS, 0);
+		map.put(Stat.MOV, 0);
+		map.put(Stat.ARMOR, 0);
+	
+		return map;
+	}
+	
 	public Map<Stat, Integer> baseStats(){
 		Map<Stat, Integer> map = new HashMap<Stat, Integer>();
 		
@@ -68,5 +82,6 @@ public abstract class Job{
 		return map;
 	}
 	
+	public abstract int getMaxEnergy();
 	public abstract int calculateDamage();
 }

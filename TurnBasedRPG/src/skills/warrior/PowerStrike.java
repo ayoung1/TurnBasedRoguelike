@@ -1,6 +1,7 @@
 package skills.warrior;
 
 import skills.Skill;
+import damage.*;
 import figure.Combatant;
 import figure.Figure;
 import figure.Figure.Stat;
@@ -15,7 +16,7 @@ public class PowerStrike extends Skill {
 	public void onCast(Combatant caster, Combatant target) {
 		int damage = caster.getFigure().getStat(Stat.STR);
 		damage *= 2.0;
-		target.takeDamage(caster, damage);
+		target.takeDamage(caster, new Damage(damage, Damage.Type.PHYSICAL));
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class PowerStrike extends Skill {
 	}
 
 	@Override
-	public void onTakeDamage(Combatant attacked, Combatant attacker) {
+	public void onTakeDamage(Combatant attacked, Combatant attacker, Damage.Type type) {
 		// TODO Auto-generated method stub
 
 	}

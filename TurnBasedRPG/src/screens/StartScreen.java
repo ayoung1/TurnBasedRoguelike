@@ -3,9 +3,14 @@ package screens;
 import java.awt.event.KeyEvent;
 
 import asciiPanel.AsciiPanel;
+import engine.GameEngine;
 
 public class StartScreen implements Screen{
 
+	public StartScreen(){
+		GameEngine.startEngine();
+	}
+	
 	private Screen subscreen;
 	@Override
 	public void displayOutput(AsciiPanel terminal) {		
