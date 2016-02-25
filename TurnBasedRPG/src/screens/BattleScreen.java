@@ -106,7 +106,8 @@ public class BattleScreen implements Screen{
 		int i = 0;
 		
 		do{
-			if(this.combatants.get(i).getLife() <= 0){
+			if(this.combatants.get(i).isDead()){
+				GameEngine.addToGraveyard(this.combatants.get(i).getFigure());
 				this.combatants.remove(i);
 				i = 0;
 			}else

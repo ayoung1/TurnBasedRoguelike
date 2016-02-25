@@ -9,6 +9,7 @@ import engine.GameEngine;
 import figure.*;
 import figure.Figure.Stat;
 import icon.Icon;
+import items.Weapon;
 import asciiPanel.AsciiPanel;
 
 public class CharacterCreationScreen implements Screen {
@@ -56,6 +57,13 @@ public class CharacterCreationScreen implements Screen {
 		
 		for(Stat s : Figure.Stat.values())
 			terminal.write(s.name + ": " + list.get(s) + " + " + growth.get(s), twoThird+4, height++);
+	
+		terminal.write("Useable Weapon Types: ", twoThird+3, height++);
+		
+		height++;
+		
+		for(Weapon.Type t : this.job.getUseableWeapons())
+			terminal.write(t.name(), twoThird+4, height++);
 	}
 	
 	private void displayJobs(AsciiPanel terminal){
@@ -95,7 +103,7 @@ public class CharacterCreationScreen implements Screen {
 			Figure figure = new Figure(this.userInputName, new Icon(this.job.getName().charAt(0), AsciiPanel.brightCyan), this.job, this.gender);
 			GameEngine.addToParty(figure);
 			GameEngine.addMainFigure(figure);
-			return new BattleScreen();
+			return new MainScreen();
 		}
 		
 		return this;

@@ -55,6 +55,10 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		return (int)pri;
 	}
 	
+	public boolean isDead(){
+		return this.curHealth <= 0;
+	}
+	
 	public void startTurn(){
 		if(this.actions > 0)
 			this.actions = 1;

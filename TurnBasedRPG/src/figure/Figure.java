@@ -3,6 +3,7 @@ package figure;
 import java.util.Map;
 
 import asciiPanel.AsciiPanel;
+import engine.GameEngine;
 import icon.Icon;
 import items.*;
 
@@ -119,6 +120,17 @@ public class Figure{
 	
 	public void printToTerminal(AsciiPanel _terminal, int _x, int _y) {
 		icon.printToTerminal(_terminal, _x, _y);
+	}
+	
+	public int printInfomation(int x, int y){
+		String str = " ";
+		GameEngine.getTerminal().write(this.name + "  L:" + this.level, x, y++);
+		for(Stat s : Stat.values()){
+			if(s != Stat.ARMOR && s != Stat.MOV)
+			str += s.name + ":" + this.stats.get(s) + " ";
+		}
+		GameEngine.getTerminal().write(str, x, y++);
+		return y;
 	}
 	
 	public int calculateDamage(){

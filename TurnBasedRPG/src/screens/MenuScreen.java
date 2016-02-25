@@ -32,5 +32,4 @@ public class MenuScreen implements Screen {
 			return null;
 		return this;
 	}
-
 }

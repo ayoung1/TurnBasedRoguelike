@@ -2,6 +2,7 @@ package figure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import figure.Figure.Stat;
@@ -10,11 +11,11 @@ import items.Weapon.Type;
 import skills.Skill;
 
 public abstract class Job{
-
+	
 	private String name;
 	private Figure figure;
-	private ArrayList<Type> weapons;
-	private ArrayList<Skill> skills;
+	private List<Type> weapons;
+	private List<Skill> skills;
 	
 	public Job(String name) {
 		assert(name != null);
@@ -26,7 +27,8 @@ public abstract class Job{
 	}
 	
 	public String getName(){return this.name;}
-	public ArrayList<Skill> getSkills(){return this.skills;}
+	public List<Skill> getSkills(){return this.skills;}
+	public List<Weapon.Type> getUseableWeapons(){return this.weapons;}
 	
 	public void setFigure(Figure figure){
 		assert(figure != null);
