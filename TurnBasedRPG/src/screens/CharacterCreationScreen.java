@@ -101,6 +101,9 @@ public class CharacterCreationScreen implements Screen {
 				this.gender != null &&
 				this.job != null){
 			Figure figure = new Figure(this.userInputName, new Icon(this.job.getName().charAt(0), AsciiPanel.brightCyan), this.job, this.gender);
+			
+			figure.levelUp(5 - figure.getLevel());
+			
 			GameEngine.addToParty(figure);
 			GameEngine.addMainFigure(figure);
 			return new MainScreen();

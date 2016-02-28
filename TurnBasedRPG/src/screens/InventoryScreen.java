@@ -11,8 +11,8 @@ public class InventoryScreen extends MenuBlock{
 
 	private List<Item> inventory = GameEngine.getInventory();
 	
-	public InventoryScreen(int size, int x, int y, int i, int j){
-		super(size,x,y,i,j);
+	public InventoryScreen(int x, int y, int i, int j){
+		super(0,x,y,i,j);
 	}
 	
 	private void displayMembers(){
@@ -29,6 +29,7 @@ public class InventoryScreen extends MenuBlock{
 	
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
+		this.modifyMax(GameEngine.getInventory().size());
 		super.respondToUserInput(key);
 		if(key.getKeyCode() == KeyEvent.VK_ENTER)
 			return null;

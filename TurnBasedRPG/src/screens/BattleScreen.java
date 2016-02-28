@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import engine.Factory;
 import engine.GameEngine;
 import figure.Combatant;
 import figure.Figure;
-import figure.Figure.Stat;
-import figure.TestFigure;
-import figure.Warrior;
 import world.World;
 import asciiPanel.AsciiPanel;
 
@@ -28,8 +26,7 @@ public class BattleScreen implements Screen{
 		this.world = GameEngine.createWorld(this.width, this.height);
 		this.combatants = new ArrayList<>();
 		
-		this.combatants.add(new Combatant(new TestFigure(new Warrior()), 2));
-		this.combatants.get(0).getFigure().modifyStat(Stat.DEX, -10);
+		this.combatants.add(new Combatant(Factory.makeFigure(false), 2));
 		
 		for(Figure figure : GameEngine.getParty())
 			this.combatants.add(new Combatant(figure, 1));

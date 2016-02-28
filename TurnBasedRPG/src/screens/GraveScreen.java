@@ -11,8 +11,8 @@ public class GraveScreen extends MenuBlock{
 
 	private List<Figure> graveyard = GameEngine.getGraveyard();
 	
-	public GraveScreen(int size, int x, int y, int i, int j){
-		super(size,x,y,i,j);
+	public GraveScreen(int x, int y, int i, int j){
+		super(0,x,y,i,j);
 	}
 	
 	private void displayMembers(){
@@ -29,6 +29,7 @@ public class GraveScreen extends MenuBlock{
 	
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
+		this.modifyMax(this.graveyard.size());
 		super.respondToUserInput(key);
 		if(key.getKeyCode() == KeyEvent.VK_ESCAPE)
 			return null;

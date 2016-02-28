@@ -11,8 +11,9 @@ public class PartyScreen extends MenuBlock{
 
 	private List<Figure> party = GameEngine.getParty();
 	
-	public PartyScreen(int size, int x, int y, int i, int j){
-		super(size,x,y,i,j);
+	public PartyScreen(int x, int y, int i, int j){
+		super(0,x,y,i,j);
+		this.setInterval(2);
 	}
 	
 	private void displayMembers(){
@@ -29,6 +30,7 @@ public class PartyScreen extends MenuBlock{
 	
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
+		super.modifyMax(GameEngine.getParty().size());
 		super.respondToUserInput(key);
 		if(key.getKeyCode() == KeyEvent.VK_ENTER)
 			return new FigureScreen(this.party.get(super.option));

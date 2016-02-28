@@ -1,6 +1,8 @@
 package figure;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import asciiPanel.AsciiPanel;
 import engine.GameEngine;
@@ -32,6 +34,9 @@ public class Figure{
 	}
 	
 	private final int BASE_HP = 10;
+	private final int HP_LVL = 3;
+	
+	private static Random random = new Random(System.currentTimeMillis());
 	
 	private String name;
 	private int level;
@@ -56,8 +61,10 @@ public class Figure{
 		this.mainhand = new Unarmed();
 		this.offhand = new Unarmed();
 		this.canDualWield = false;
-		this.stats = this.job.baseStats();
 		this.level = 1;
+		this.stats = new HashMap<>();
+		
+		this.initializeStats();
 	}
 	
 	public String getName(){return this.name;}
@@ -69,8 +76,32 @@ public class Figure{
 	public Weapon getOffhand(){return this.offhand;}
 	public boolean canDualWield(){return this.canDualWield;}
 	
+	private void initializeStats(){
+		Map<Stat, Integer> m = this.job.baseStats();
+		Random rnd = Figure.random;
+		
+		for(Stat s : Stat.values()){
+			this.stats.put(s, 0);
+			if(s != Stat.ARMOR && s != Stat.MOV)
+				this.modifyStat(s, rnd.nextInt(5)+1);
+			this.modifyStat(s, m.get(s));
+		}
+	}
+	
+	public void levelUp(int levels){
+		for(int i = 0; i < levels; i++)
+			this.levelUp();
+	}
+	
+	public void levelUp(){
+		this.level++;
+		for(Stat s : Stat.values()){
+			this.modifyStat(s, this.job.statGrowth().get(s));
+		}
+	}
+	
 	public int getMaxHealth(){
-		return this.BASE_HP + (int) (this.stats.get(Stat.CON) * 2.2);
+		return ((this.level - 1) * this.HP_LVL) + this.BASE_HP + (int) (this.stats.get(Stat.CON) * 2.2);
 	}
 	
 	public int getMaxEnergy(){
@@ -124,7 +155,7 @@ public class Figure{
 	
 	public int printInfomation(int x, int y){
 		String str = " ";
-		GameEngine.getTerminal().write(this.name + "  L:" + this.level, x, y++);
+		GameEngine.getTerminal().write(this.name + " " + this.gender.name + " L:" + this.level + " " + this.job.getName(), x, y++);
 		for(Stat s : Stat.values()){
 			if(s != Stat.ARMOR && s != Stat.MOV)
 			str += s.name + ":" + this.stats.get(s) + " ";

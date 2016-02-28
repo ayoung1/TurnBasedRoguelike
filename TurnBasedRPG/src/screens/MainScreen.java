@@ -19,14 +19,23 @@ public class MainScreen implements Screen {
 	public MainScreen(){
 		this.menuOptions = new ArrayList<>();
 		
-		this.menuOptions.add(new ScreenOption("Party", new PartyScreen(GameEngine.getParty().size()-1, widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
-		this.menuOptions.add(new ScreenOption("Inventory",new InventoryScreen(GameEngine.getInventory().size()-1, widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
-		this.menuOptions.add(new ScreenOption("Graveyard",new GraveScreen(GameEngine.getParty().size()-1, widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
+		this.menuOptions.add(new ScreenOption("Party", new PartyScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
+		this.menuOptions.add(new ScreenOption("Recruit", new RecruitScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
+		this.menuOptions.add(new ScreenOption("Inventory",new InventoryScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
+		this.menuOptions.add(new ScreenOption("Graveyard",new GraveScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
 		
 		this.menuOptions.add(new ScreenOption("To Battle", null){
 			@Override
 			public Screen getScreen() {
 				return new BattleScreen();
+			}
+		});
+		
+		this.menuOptions.add(new ScreenOption("Quit", null){
+			@Override
+			public Screen getScreen() {
+				System.exit(0);
+				return null;
 			}
 		});
 	}

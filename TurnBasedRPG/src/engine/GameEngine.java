@@ -65,9 +65,7 @@ public class GameEngine {
 	}
 	
 	public static void clearScreen(){
-		for(int i = 0; i < terminal.getWidthInCharacters()-1; i++)
-			for(int j = 0; j < terminal.getHeightInCharacters()-1; j++)
-				terminal.write(" ", i, j);
+		terminal.clear();
 	}
 	
 	public static void setTerminal(AsciiPanel terminal){

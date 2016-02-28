@@ -7,17 +7,17 @@ import java.util.List;
 import asciiPanel.AsciiPanel;
 import engine.GameEngine;
 import figure.Figure;
-import figure.Figure.Stat;
 
 public class FigureScreen implements Screen {
 
 	private Figure figure;
-	private Screen options;
+	private FigureOptions options;
+	private Screen figureFragment;
 	private int third = GameEngine.getTerminal().getWidthInCharacters() / 3;
 	
 	private class FigureOptions extends MenuBlock{
 
-		List<ScreenOption> options;
+		public final List<ScreenOption> options;
 		
 		public FigureOptions(int max, int x, int y, int i, int j) {
 			super(max, x, y, i, j);
@@ -29,13 +29,17 @@ public class FigureScreen implements Screen {
 			this.options.add(new ScreenOption("Equip", null){
 				@Override
 				public Screen getScreen() {
-					return null;
+					return new EquipScreen(GameEngine.getParty().get(option));
 				}
 			});
 			
 			this.options.add(new ScreenOption("Send to Reserves", null){
 				@Override
 				public Screen getScreen() {
+					if(figure == GameEngine.getMainFigure())
+						return null;
+					GameEngine.removeFromParty(figure);
+					GameEngine.addToReserves(figure);
 					return null;
 				}
 			});
@@ -61,43 +65,22 @@ public class FigureScreen implements Screen {
 		assert(figure != null);
 		this.figure = figure;
 		this.options = new FigureOptions(5, 0, 0, this.third-1, GameEngine.getTerminal().getHeightInCharacters()-1);
-	}
-	
-	private void displayFigure(){
-		AsciiPanel terminal = GameEngine.getTerminal();
-		int offset = this.third+2;
-		int height = 1;
-		
-		terminal.write(this.figure.getName(), offset, height++);
-		terminal.write(this.figure.getGender().name, offset, height++);
-		terminal.write(this.figure.getJob().getName(), offset, height++);
-		height++;
-		terminal.write("Stats:", offset, height++);
-		
-		for(Stat s : Stat.values())
-			terminal.write(s.name + ": " + this.figure.getStat(s), offset+1, height++);
-	
-		height++;
-		terminal.write("Equipment:", offset, height++);
-		terminal.write("Main: " + this.figure.getMainhand().getName(), offset+1, height++);
-		terminal.write("Offhand: " + this.figure.getOffhand().getName(), offset+1, height++);
-	}
-	
-	private void displayBorders(){		
-		GameEngine.displayBorders(this.third, 0, GameEngine.getTerminal().getWidthInCharacters()-1, GameEngine.getTerminal().getHeightInCharacters()-1);
+		this.figureFragment = new FigureFragment(figure, this.third, 0, GameEngine.getTerminal().getWidthInCharacters()-1, GameEngine.getTerminal().getHeightInCharacters()-1);
 	}
 	
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
 		GameEngine.clearScreen();
 		this.options.displayOutput(terminal);
-		this.displayFigure();
-		this.displayBorders();
+		this.figureFragment.displayOutput(terminal);
 	}
 
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
 		this.options.respondToUserInput(key);
+		
+		if(key.getKeyCode() == KeyEvent.VK_ENTER)
+			return this.options.options.get(this.options.option).getScreen();
 		
 		if(key.getKeyCode() == KeyEvent.VK_ESCAPE)
 			return null;
