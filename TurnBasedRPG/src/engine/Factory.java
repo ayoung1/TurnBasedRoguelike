@@ -1,5 +1,7 @@
 package engine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import asciiPanel.AsciiPanel;
@@ -20,6 +22,13 @@ public class Factory {
 			"Atasy", "Boz", "Abela", "Atoni", "Uraya", "Oinau", "Thock", "Awrr", "Kelm", "Teech", "Darnn", "Aughk", "Warc", "Ildc",
 			"Ainai", "Belt", "Aengo", "Emsh", "Aoldo", "Acho", "Seuc", "Dyh", "Rakw", "Iagey", "Kaz", "Drad", "Nas", "Zhoth", "Iloro",
 			"Ebele", "Lin", "Jog", "Angg", "Den", "Delr", "Ibanu", "Nap", "Undrr", "Ewore", "Chenn", "Imosy", "Ashnt", "Uskl"};
+	
+	public static List<Figure> makeFigure(int amount, boolean ally){
+		List<Figure> list = new ArrayList<>();
+		for(int i = 0; i < amount; i++)
+			list.add(makeFigure(ally));
+		return list;
+	}
 	
 	public static Figure makeFigure(boolean ally){
 		Figure figure;

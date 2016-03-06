@@ -1,8 +1,9 @@
 package items;
 
+import screens.MenuBlock.MenuSelection;
 import screens.Screen;
 
-public abstract class Item {
+public abstract class Item implements MenuSelection{
 	private String name;
 	
 	public Item(String _name){

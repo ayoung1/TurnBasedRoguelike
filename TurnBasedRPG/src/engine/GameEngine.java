@@ -32,6 +32,7 @@ public class GameEngine {
 	}
 	
 	public static List<Figure> getParty(){return gameEngine.party;}
+	public static List<Figure> getReserves(){return gameEngine.reserves;}
 	public static List<Figure> getGraveyard(){return gameEngine.graveyard;}
 	public static List<Item> getInventory(){return gameEngine.inventory;}
 	public static AsciiPanel getTerminal(){return GameEngine.terminal;}
@@ -66,6 +67,13 @@ public class GameEngine {
 	
 	public static void clearScreen(){
 		terminal.clear();
+	}
+	
+	public static void clearArea(int x, int y, int x2, int y2){
+		for(int i = y; i < y2; i++){
+			for(int j = x; j < x2; j++)
+				terminal.write(" ", j, i);
+		}
 	}
 	
 	public static void setTerminal(AsciiPanel terminal){

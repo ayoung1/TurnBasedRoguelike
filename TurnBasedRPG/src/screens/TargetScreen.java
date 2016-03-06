@@ -28,7 +28,7 @@ public class TargetScreen extends CursorScreen implements Screen{
 		
 		for(int i = 0; i < this.getWorld().getWidth(); i++){
 			for(int j = 0; j < this.getWorld().getHeight(); j++){
-				if(this.getWorld().isPathable(i, j) && Trig.distanceBetweenPoints(x, y, i, j) <= this.skill.getArea())
+				if(this.getWorld().isPathable(i, j) && Trig.manhattanDistanceBetweenPoints(x, y, i, j) <= this.skill.getArea())
 					terminal.write((char)178, i+this.getOffset(), j+1, AsciiPanel.brightBlue);
 			}
 		}
@@ -40,7 +40,7 @@ public class TargetScreen extends CursorScreen implements Screen{
 		
 		for(int i = 0; i < this.getWorld().getWidth(); i++){
 			for(int j = 0; j < this.getWorld().getHeight(); j++){
-				if(this.getWorld().isPathable(i, j) && Trig.distanceBetweenPoints(x, y, i, j) <= this.skill.getRange())
+				if(this.getWorld().isPathable(i, j) && Trig.manhattanDistanceBetweenPoints(x, y, i, j) <= this.skill.getRange())
 					terminal.write((char)178, i+this.getOffset(), j+1, AsciiPanel.white);
 			}
 		}
@@ -51,12 +51,12 @@ public class TargetScreen extends CursorScreen implements Screen{
 		int x = this.getCursor().getX();
 		int y = this.getCursor().getY();
 		
-		if(Trig.distanceBetweenPoints(x, y, this.getCombatant().getX(), this.getCombatant().getY()) > this.skill.getRange())
+		if(Trig.manhattanDistanceBetweenPoints(x, y, this.getCombatant().getX(), this.getCombatant().getY()) > this.skill.getRange())
 			return list;
 		
 		for(int i = 0; i < this.getWorld().getWidth(); i++){
 			for(int j = 0; j < this.getWorld().getHeight(); j++){
-				if(Trig.distanceBetweenPoints(x, y, i, j) <= this.skill.getArea()){
+				if(Trig.manhattanDistanceBetweenPoints(x, y, i, j) <= this.skill.getArea()){
 					if(this.getWorld().combatantAt(i, j) != null)
 						list.add(this.getWorld().combatantAt(i, j));
 				}

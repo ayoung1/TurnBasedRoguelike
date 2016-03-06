@@ -2,10 +2,9 @@ package icon;
 
 import java.awt.Color;
 
-import screens.Printable;
 import asciiPanel.AsciiPanel;
 
-public class Icon implements Printable{
+public class Icon{
 
 	private char character;
 	private Color color;

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import figure.Figure.Stat;
 import items.Weapon.Type;
+import skills.warrior.*;
 
 public class Warrior extends Job {
 
@@ -13,8 +14,13 @@ public class Warrior extends Job {
 	public Warrior() {
 		super("Warrior");
 		this.addWeaponTypes(Type.SWORD, Type.AXE, Type.SPEAR, Type.SHIELD);
+		this.setupSkills();
 	}
 
+	private void setupSkills(){
+		this.addSkills(new PowerStrike(), new Rend(), new ShieldBash());
+	}
+	
 	public void setFigure(Figure figure){this.figure = figure;}
 	
 	@Override

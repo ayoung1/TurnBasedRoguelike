@@ -12,68 +12,47 @@ public class MainScreen implements Screen {
 	private Screen subscreen;
 	private int[] widthThirds = {terminal.getWidthInCharacters() / 3, ((terminal.getWidthInCharacters() / 3) * 2)+1};
 	private int titleHeight = 5;
-	private int selectedOption = 0;
-	
-	private List<ScreenOption> menuOptions;
+	private MenuBlock menuBlock;
 	
 	public MainScreen(){
-		this.menuOptions = new ArrayList<>();
+		List<ScreenOption> list = this.getList();
+		this.menuBlock = new MenuBlock(list, 0,6,this.widthThirds[0], (this.titleHeight+2) + list.size()){};
+	}
+	
+	private List<ScreenOption> getList(){
+		List<ScreenOption> menuOptions = new ArrayList<>();
 		
-		this.menuOptions.add(new ScreenOption("Party", new PartyScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
-		this.menuOptions.add(new ScreenOption("Recruit", new RecruitScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
-		this.menuOptions.add(new ScreenOption("Inventory",new InventoryScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
-		this.menuOptions.add(new ScreenOption("Graveyard",new GraveScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
+		menuOptions.add(new ScreenOption("Party", new PartyScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
+		menuOptions.add(new ScreenOption("Reserves", new ReserveScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
+		menuOptions.add(new ScreenOption("Recruit", new RecruitScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
+		menuOptions.add(new ScreenOption("Inventory",new InventoryScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
+		menuOptions.add(new ScreenOption("Graveyard",new GraveScreen(widthThirds[0]+1, titleHeight+1, terminal.getWidthInCharacters()-1, terminal.getHeightInCharacters()-1)));
 		
-		this.menuOptions.add(new ScreenOption("To Battle", null){
+		menuOptions.add(new ScreenOption("To Battle", null){
 			@Override
 			public Screen getScreen() {
 				return new BattleScreen();
 			}
 		});
 		
-		this.menuOptions.add(new ScreenOption("Quit", null){
-			@Override
-			public Screen getScreen() {
-				System.exit(0);
-				return null;
-			}
-		});
+		return menuOptions;
 	}
 	
 	private void displayBorders(){
 		GameEngine.displayBorders(0, 0, this.terminal.getWidthInCharacters()-1, this.titleHeight);
-		GameEngine.displayBorders(0, 6, this.widthThirds[0], (this.titleHeight+2)+this.menuOptions.size());
-	}
-	
-	private void showMenuOptions(){
-		int height = this.titleHeight+1;
-		this.terminal.write("Options", 2, height++);
-		
-		this.terminal.write(">", 1, height + this.selectedOption);
-		
-		for(ScreenOption s : this.menuOptions)
-			this.terminal.write(s.name, 2, height++);
 	}
 	
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
 		this.displayBorders();
-		this.showMenuOptions();
+		this.menuBlock.displayOutput(terminal);
 		
 		if(this.subscreen != null)
 			this.subscreen.displayOutput(terminal);
 	}
 
 	private void moveCursor(KeyEvent key){
-		if(key.getKeyCode() == KeyEvent.VK_UP){
-			this.selectedOption--;
-			if(this.selectedOption < 0)
-				this.selectedOption = this.menuOptions.size()-1;
-		}else if(key.getKeyCode() == KeyEvent.VK_DOWN){
-			this.selectedOption++;
-			if(this.selectedOption > this.menuOptions.size()-1)
-				this.selectedOption = 0;
-		}
+		this.menuBlock.respondToUserInput(key);
 	}
 	
 	@Override
@@ -84,7 +63,7 @@ public class MainScreen implements Screen {
 			this.moveCursor(key);
 			
 			if(key.getKeyCode() == KeyEvent.VK_ENTER){
-				Screen screen = this.menuOptions.get(this.selectedOption).getScreen();
+				Screen screen = ((ScreenOption)this.menuBlock.getList().get(this.menuBlock.getSelectedOption())).getScreen();
 				if(screen instanceof BattleScreen)
 					return screen;
 				else
@@ -96,5 +75,4 @@ public class MainScreen implements Screen {
 		}	
 		return this;
 	}
-
 }

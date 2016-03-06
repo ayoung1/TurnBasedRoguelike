@@ -1,5 +1,6 @@
 package figure;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -8,17 +9,20 @@ import asciiPanel.AsciiPanel;
 import damage.Damage;
 import damage.Damage.Type;
 import engine.GameEngine;
-import screens.Printable;
+import skills.Debuff;
 import skills.Skill;
 import world.World;
 
-public class Combatant implements Comparable<Combatant>, Printable{
+public class Combatant implements Comparable<Combatant>{
 	public enum Action{
 		ATTACK,
 		ITEM;
 	}
 	
 	private static Random random = new Random(System.currentTimeMillis());
+	
+	private List<Debuff> debuffs;
+	private List<Debuff> toRemoveDebuffs;	
 	
 	private Figure figure;
 	private int moves;
@@ -29,6 +33,15 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	private int curHealth;
 	private int curEnergy;
 	
+	public static List<Combatant> combatant(List<Figure> list, int force){
+		List<Combatant> combatants = new ArrayList<>();
+		
+		for(Figure f : list)
+			combatants.add(new Combatant(f, force));
+		
+		return combatants;
+	}
+	
 	public Combatant(Figure _figure, int _force){
 		assert(_figure != null);
 		this.figure = _figure;
@@ -37,6 +50,8 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		this.moves = 0;
 		this.curHealth = this.figure.getMaxHealth();
 		this.curEnergy = this.figure.getMaxEnergy();
+		this.debuffs = new ArrayList<>();
+		this.toRemoveDebuffs = new ArrayList<>();
 	}
 	
 	public Figure getFigure(){return this.figure;}
@@ -47,6 +62,28 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	public int getForce(){return this.force;}
 	public int getX(){return this.x;}
 	public int getY(){return this.y;}
+	
+	public void modifyMoves(int amount){
+		this.moves += amount;
+	}
+	
+	public void modifyActions(int amount){
+		this.actions += amount;
+	}
+	
+	public void addDebuff(Debuff debuff){
+		this.debuffs.add(debuff);
+	}
+	
+	public void dispellDebuff(){
+		if(this.debuffs.size() == 0)
+			return;
+		this.debuffs.remove(random.nextInt(this.debuffs.size()));
+	}
+	
+	public void removeDebuff(Debuff debuff){
+		this.toRemoveDebuffs.add(debuff);
+	}
 	
 	private int calculatePriority(){
 		int pri = this.figure.getStat(Stat.DEX) + this.figure.getStat(Stat.MOV);
@@ -59,6 +96,16 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		return this.curHealth <= 0;
 	}
 	
+	private void debuffHandler(){
+		for(Debuff d : this.debuffs)
+			d.update();
+		for(Debuff d : this.toRemoveDebuffs)
+			d.onRemove();
+		
+		this.debuffs.removeAll(this.toRemoveDebuffs);
+		this.toRemoveDebuffs.clear();
+	}
+	
 	public void startTurn(){
 		if(this.actions > 0)
 			this.actions = 1;
@@ -68,6 +115,8 @@ public class Combatant implements Comparable<Combatant>, Printable{
 			this.moves = 1;
 		else
 			this.moves++;
+		
+		this.debuffHandler();
 	}
 	
 	public void addToWorld(){
@@ -90,10 +139,12 @@ public class Combatant implements Comparable<Combatant>, Printable{
 	}
 	
 	private void attack(Combatant target){
-		for(Skill s : this.getFigure().getJob().getSkills())
-			s.onHit(this, target);
+		Damage damage = new Damage(this.getFigure().calculateDamage(), Type.PHYSICAL);
 		
-		target.takeDamage(this, new Damage(this.getFigure().calculateDamage(), Type.PHYSICAL));
+		for(Skill s : this.getFigure().getJob().getSkills())
+			s.onHit(this, target, damage);
+		
+		target.takeDamage(this, damage);
 		
 		this.actions--;
 	}
@@ -102,7 +153,7 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		double multiplier = 100 / (100 + this.figure.getStat(Stat.ARMOR));
 		int d = damage.damage;
 		for(Skill s : this.getFigure().getJob().getSkills())
-			s.onTakeDamage(this, attacker, damage.type);
+			s.onTakeDamage(this, attacker, damage);
 		
 		d *= (int) multiplier;
 		
@@ -166,7 +217,6 @@ public class Combatant implements Comparable<Combatant>, Printable{
 		return arg0.calculatePriority() - this.calculatePriority();
 	}
 
-	@Override
 	public void printToTerminal(AsciiPanel terminal, int x, int y) {
 		terminal.write("f" + this.force + " :" + this.figure.getIcon().getCharacter() + ": " + this.figure.getName(), x, y);
 	}

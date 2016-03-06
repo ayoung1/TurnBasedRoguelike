@@ -54,4 +54,16 @@ public class Weapon extends Item {
 		return null;
 	}
 
+	@Override
+	public void printMenuRepresentation(int offset, int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int menuOptionHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

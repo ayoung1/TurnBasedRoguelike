@@ -18,7 +18,7 @@ public class FightScreen extends CursorScreen implements Screen {
 		int x = this.getCombatant().getX();
 		int y = this.getCombatant().getY();
 		
-		return Trig.distanceBetweenPoints(x, y, i, j) <= range;
+		return Trig.manhattanDistanceBetweenPoints(x, y, i, j) <= range;
 	}
 	
 	private void displayRange(AsciiPanel terminal){

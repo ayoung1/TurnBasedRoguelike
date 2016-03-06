@@ -1,7 +1,7 @@
 package screens;
 
-import asciiPanel.AsciiPanel;
+import java.util.List;
 
 public interface Printable {
-	public void printToTerminal(AsciiPanel _terminal, int _x, int _y);
+	public List<String> getLines();
 }

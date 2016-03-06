@@ -14,6 +14,8 @@ import asciiPanel.AsciiPanel;
 
 public class BattleScreen implements Screen{
 
+	private static final int TEST_NUMBER = 1;
+	
 	private int height = 20;
 	private int width = 40;
 	private int offset;
@@ -26,7 +28,7 @@ public class BattleScreen implements Screen{
 		this.world = GameEngine.createWorld(this.width, this.height);
 		this.combatants = new ArrayList<>();
 		
-		this.combatants.add(new Combatant(Factory.makeFigure(false), 2));
+		this.combatants.addAll(Combatant.combatant(Factory.makeFigure(TEST_NUMBER, false), 2));
 		
 		for(Figure figure : GameEngine.getParty())
 			this.combatants.add(new Combatant(figure, 1));

@@ -23,7 +23,7 @@ public class MoveScreen extends CursorScreen implements Screen{
 		
 		for(int i = 0; i < this.getWorld().getWidth(); i++){
 			for(int j = 0; j < this.getWorld().getHeight(); j++){
-				if(this.getWorld().isPathable(i, j) && Trig.distanceBetweenPoints(x, y, i, j) <= this.movement)
+				if(this.getWorld().isPathable(i, j) && Trig.manhattanDistanceBetweenPoints(x, y, i, j) <= this.movement)
 					terminal.write((char)178, i+this.getOffset(), j+1, AsciiPanel.white);
 			}
 		}
@@ -33,7 +33,7 @@ public class MoveScreen extends CursorScreen implements Screen{
 		int x = this.getCombatant().getX();
 		int y = this.getCombatant().getY();
 		
-		if(Trig.distanceBetweenPoints(x, y, this.getCursor().getX(), this.getCursor().getY()) <= this.movement)
+		if(Trig.manhattanDistanceBetweenPoints(x, y, this.getCursor().getX(), this.getCursor().getY()) <= this.movement)
 			this.getCombatant().move(this.getCursor().getX(), this.getCursor().getY());
 	}
 	
